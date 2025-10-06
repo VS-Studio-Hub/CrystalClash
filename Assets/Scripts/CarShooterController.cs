@@ -44,6 +44,18 @@ public class CarShooterController : MonoBehaviour
     private void Update()
     {
         GetInput();
+        Vector3 mouseWorldPosition = Vector3.zero;
+
+        // Always use the current active camera for raycasting
+        Camera currentCam = aimInput ? aimCamera : mainCamera;
+
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = currentCam.ScreenPointToRay(screenCenterPoint);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
+        {
+            debugTransform.position = raycastHit.point;
+            mouseWorldPosition = raycastHit.point;
+        }
 
         // Toggle cameras based on aim input
         if (aimInput)
@@ -57,18 +69,6 @@ public class CarShooterController : MonoBehaviour
             mainCamera.gameObject.SetActive(true);
         }
 
-        Vector3 mouseWorldPosition = Vector3.zero;
-
-        // Always use the current active camera for raycasting
-        Camera currentCam = aimInput ? aimCamera : mainCamera;
-
-        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        Ray ray = currentCam.ScreenPointToRay(screenCenterPoint);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
-        {
-            debugTransform.position = raycastHit.point;
-            mouseWorldPosition = raycastHit.point;
-        }
 
 
         if (shootInput)
